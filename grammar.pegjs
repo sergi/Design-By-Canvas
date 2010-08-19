@@ -22,8 +22,9 @@ block_command
      return e;
 }
 
+// Variables can't start with a number
 variable
- = v:[A-Za-z0-9]+ { return { type: "string", value: v.join("") } }
+ = v:([a-zA-Z_][a-zA-Z0-9_]*) { return { type: "string", value: v.join("") } }
 
 integer
   = digits:[0-9]+ { return { type: "integer", value: parseInt(digits.join(""), 10) } }
