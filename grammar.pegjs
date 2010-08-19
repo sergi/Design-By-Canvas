@@ -2,10 +2,10 @@ start
  = call+
 
 call
- = command:(block_command / command) ws* lb* { return command }
+ = command:(block_command / command) _ lb* { return command }
 
 command
- = ws* cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? lb+ {
+ = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb+ {
      return {
          type: "command",
          name: cmd.join("").toLowerCase(),
@@ -56,11 +56,14 @@ primary
 value
  = variable / integer / additive / point / special
 
+comment
+ = "//" (!lb .)*
+
 ws
  = [ \t]
 
 _
- = ws*
+ = (ws / comment)*
 
 lb
  = "\n"
