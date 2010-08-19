@@ -41,12 +41,12 @@ special
 }
 
 additive
-  = left:muldiv _ sign:[+-] _ right:additive { return { cmd:sign, args:[left,right] }}
+  = left:muldiv _ sign:[+-] _ right:additive { return { type: "command", name:sign, args:[left,right] }}
   / muldiv
 
 muldiv
   = left:primary _ sign:[*/] _ right:muldiv {
-        return { cmd: sign, args:[left, right] }
+        return { type: "command", name: sign, args:[left, right] }
     }
   / primary
 
