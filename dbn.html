@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#content {
+    float: left;
+    padding: 10px;
+    margin: 20px;
+    background: #666;
+    border: 5px solid #ccc;
+    width: 410px;
+    height: 500px;
+}
+
+</style>
+<script type="text/javascript" src="underscore-min.js"></script> 
+<script type="text/javascript" src="jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="DBNParser.js"></script>
+<script type="text/javascript" src="interpreter.js"></script> 
+<script>
+$(document).ready(function() {
+    var dbn2Canvas = new Interpreter($("#example")[0]);
+    $("#code").keyup(function onchange() {
+        dbn2Canvas.reset()
+        dbn2Canvas.evalExpression(
+            DBNParser.parse(
+                $("#code").val()
+            )
+        )
+    })
+});
+
+</script>
+</head>
+<body>
+<div id="content">
+    <textarea id="code" rows="20" cols="50"></textarea>
+</div>
+
+<canvas id="example" width="200" height="200">
+    Your browser must support the canvas tag to show this application properly
+</canvas>
+
+
+</body>
+</html>
