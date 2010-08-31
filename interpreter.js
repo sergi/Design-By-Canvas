@@ -20,7 +20,7 @@ Interpreter.cmdTable = {
     "/": function(a, b) { return Math.round(a / b) },
     "+": function(a, b) { return Math.round(a + b) },
     "-": function(a, b) { return Math.round(a - b) },
-    
+
     pen: function(p) {
         this.ctx.strokeStyle = Interpreter.gray2rgb(p.args[0])
     },
@@ -29,7 +29,7 @@ Interpreter.cmdTable = {
         var ctx = this.ctx
         var height = ctx.canvas.clientHeight
 
-        ctx.moveTo(a[0], (height-a[1]))  
+        ctx.moveTo(a[0], (height-a[1]))
         ctx.lineTo(a[2], (height-a[3]))
         ctx.closePath()
         ctx.stroke()
@@ -46,7 +46,7 @@ Interpreter.cmdTable = {
             var h = ctx.canvas.clientHeight
             var w = ctx.canvas.clientWidth
             var imageData = ctx.getImageData(0, 0, w, h)
-            
+
             var index = (dest.x + (h-dest.y) * imageData.width) * 4
 
             var colorValue = Math.ceil(255 - (p.args[1] * 2.55))
@@ -71,7 +71,7 @@ Interpreter.cmdTable = {
     repeat: function(p) {
         var args = p.args,
             id = args[0], f = args[1], c = args[2],
-            // Cloning context object because otherwise we will change 
+            // Cloning context object because otherwise we will change
             // properties of the parent context, messing up everything
             scopeObj = _.clone(p.scope) || {}
 
@@ -111,7 +111,7 @@ Interpreter.typeTable = {
         return v
     },
     "integer": function(e, scope) { return e.value },
-    "point": function(e, scope) { 
+    "point": function(e, scope) {
         return {
             type: "point",
             x: this.evalType(e.x, scope),

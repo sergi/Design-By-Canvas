@@ -7,9 +7,9 @@ call
 command
  = _ cmd:[A-Za-z0-9?]+ args:((ws+ value)+)? _ lb+ {
      return {
-         type: "command",
-         name: cmd.join("").toLowerCase(),
-         args: args ? args.map(function(a) { return a[1] }) : null
+       type: "command",
+       name: cmd.join("").toLowerCase(),
+       args: args ? args.map(function(a) { return a[1] }) : null
      }
    }
 
@@ -24,13 +24,29 @@ block_command
 
 // Variables can't start with a number
 variable
- = v:([a-zA-Z_][a-zA-Z0-9_]*) { return { type: "string", value: v.join("") } }
+ = v:([a-zA-Z_][a-zA-Z0-9_]*) { 
+     return { 
+       type: "string",
+       value: v.join("")
+     } 
+   }
 
 integer
-  = digits:[0-9]+ { return { type: "integer", value: parseInt(digits.join(""), 10) } }
+  = digits:[0-9]+ { 
+      return { 
+        type: "integer", 
+        value: parseInt(digits.join(""), 10) 
+      }
+    }
 
 point
- = "[" left:value ws right:value "]" { return { type: "point", x:left, y:right } }
+ = "[" left:value ws right:value "]" { 
+     return { 
+       type: "point", 
+       x:left, 
+       y:right 
+     } 
+   }
 
 special
  = "<" _ left:variable args:(ws value)+ ">" {
@@ -41,12 +57,22 @@ special
 }
 
 additive
-  = left:muldiv _ sign:[+-] _ right:additive { return { type: "command", name:sign, args:[left,right] }}
+  = left:muldiv _ sign:[+-] _ right:additive { 
+      return { 
+        type: "command", 
+        name:sign, 
+        args:[left,right] 
+      }
+    }
   / muldiv
 
 muldiv
   = left:primary _ sign:[*/] _ right:muldiv {
-        return { type: "command", name: sign, args:[left, right] }
+      return { 
+        type: "command", 
+        name: sign, 
+        args:[left, right] 
+      }
     }
   / primary
 
