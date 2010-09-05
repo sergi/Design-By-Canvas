@@ -1,9 +1,6 @@
 var Interpreter = function(canvas) {
     this.ctx = canvas.getContext('2d')
-    this.r = {
-        vars: {},
-        cmds: {}
-    }
+    this.vars = {}
 }
 
 /*
@@ -15,12 +12,20 @@ Interpreter.gray2rgb = function(gray) {
     return "rgb(" + value + "," + value  +"," + value + ")"
 }
 
-Interpreter.cmdTable = {
-    "*": function(a, b) { return Math.round(a * b) },
-    "/": function(a, b) { return Math.round(a / b) },
-    "+": function(a, b) { return Math.round(a + b) },
-    "-": function(a, b) { return Math.round(a - b) },
+Interpreter.expTable = {
+    "*": function(a, b) { return parseInt(a * b) },
+    "/": function(a, b) { return parseInt(a / b) },
+    "+": function(a, b) { return parseInt(a + b) },
+    "-": function(a, b) { return parseInt(a - b) },
 
+    paper: function(p) {
+        var ctx = this.ctx
+        var w = ctx.canvas.clientWidth
+        var h = ctx.canvas.clientHeight
+
+        ctx.fillStyle = Interpreter.gray2rgb(p.args[0])
+        ctx.fillRect(0, 0, w, h)
+    },
     pen: function(p) {
         this.ctx.strokeStyle = Interpreter.gray2rgb(p.args[0])
     },
@@ -60,14 +65,6 @@ Interpreter.cmdTable = {
             this.r.vars[p.args[0]] = p.args[1]
         }
     },
-    paper: function(p) {
-        var ctx = this.ctx
-        var w = ctx.canvas.clientWidth
-        var h = ctx.canvas.clientHeight
-
-        ctx.fillStyle = Interpreter.gray2rgb(p.args[0])
-        ctx.fillRect(0, 0, w, h)
-    },
     repeat: function(p) {
         var args = p.args,
             id = args[0], f = args[1], c = args[2],
@@ -83,7 +80,7 @@ Interpreter.cmdTable = {
     command: function(p) {
         var args = _.rest(p.args)
 
-        Interpreter.cmdTable[p.args[0]] = function(_p) {
+        Interpreter.expTable[p.args[0]] = function(_p) {
             // Cloning context object because otherwise we will change
             // properties of the parent context, messing up everything
             var scopeObj = _.clone(p.scope) || {}
@@ -99,7 +96,7 @@ Interpreter.typeTable = {
         var values = _.map(e.args, function(a) {
                 return this.evalType(a, scope)
             }, this)
-        return Interpreter.cmdTable[e.name].apply(this, values)
+        return Interpreter.expTable[e.name].apply(this, values)
     },
     "string": function(e, scope) {
         var vars = this.r.vars
@@ -129,7 +126,7 @@ Interpreter.prototype = {
             var args = _.map(c.args, function(a) {
                 return this.evalType(a, scope)
             }, this)
-            Interpreter.cmdTable[c.name].call(this, {
+            Interpreter.expTable[c.name].call(this, {
                 args: args,
                 block: c.block,
                 scope: scope
