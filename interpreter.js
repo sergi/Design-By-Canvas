@@ -1,4 +1,5 @@
 var Interpreter = function(canvas) {
+    this.canvas = canvas
     this.ctx = canvas.getContext('2d')
     this.vars = {}
 }
@@ -36,7 +37,6 @@ Interpreter.expTable = {
 
         ctx.moveTo(a[0], (height-a[1]))
         ctx.lineTo(a[2], (height-a[3]))
-        ctx.closePath()
         ctx.stroke()
     },
 
@@ -135,8 +135,8 @@ Interpreter.prototype = {
     },
     reset: function() {
         var ctx = this.ctx
-        var imageData = ctx.createImageData(ctx.canvas.width, ctx.canvas.height)
-        ctx.putImageData(imageData , 0, 0)
+        // Resets all cnavas state and properties
+        this.canvas.width = this.canvas.width
         this.r = { vars: {}, cmds: {} }
     }
 }
